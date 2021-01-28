@@ -2,7 +2,7 @@ body {
     background-color: grey;
 }
 
-div#map {
+div#map_div {
     height: 1000px;
     width: 1000px;
     background-color: white;
