@@ -14,7 +14,7 @@ function requestForPlayerPositions() {
     if (DEBUG_FLAG) {
         var ret = {
             "players": [
-                { "player": "Graziano", "position_x": DEBUG.Graziano_x, "position_y": DEBUG.Graziano_y },
+                { "player": "GrazianoGrazianoGraziano", "position_x": DEBUG.Graziano_x, "position_y": DEBUG.Graziano_y },
                 { "player": "Silvano", "position_x": DEBUG.Silvano_x, "position_y": DEBUG.Silvano_y },
                 { "player": "Mariano", "position_x": DEBUG.Mariano_x, "position_y": DEBUG.Mariano_y }
             ]

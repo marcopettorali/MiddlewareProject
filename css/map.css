@@ -72,16 +72,23 @@ div#map_div>div#follower {
     border-radius: 50%;
     width: 20px;
     height: 20px;
-    margin-top: -12px;
-    margin-left: -12px;
+    margin-top: -15px;
+    margin-left: -15px;
     background: transparent;
-    border: 2px solid rgb(255, 255, 255);
     z-index: 0;
+    border: 5px solid rgba(255,255,255,0.4);
+    backdrop-filter: blur(8px);
 }
 
 div#map_div>p#follower_text {
+    border-radius: 20px;
+    background: rgba(255,255,255,0.2);
+    backdrop-filter: blur(8px);
+    overflow: hidden;
+    text-overflow: ellipsis;
     text-align: center;
     width: 100px;
     margin-left: -50px;
+    padding: 0px 5px;
     color: white;
 }
