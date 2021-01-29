@@ -1,5 +1,6 @@
 body {
     background-color: grey;
+    font-family:Arial, Helvetica, sans-serif;
 }
 
 /*map playground*/
@@ -8,6 +9,8 @@ div#map_div {
     height: 1000px;
     width: 1000px;
     background-color: white;
+    background-image: url(./../img/map.jpg);
+    background-size: 1000px auto;
     left: 0px;
     right: 0px;
     padding: 0px;
@@ -16,7 +19,7 @@ div#map_div {
 
 /*elements in the map*/
 
-div#map_div>div {
+div#map_div>div, div#map_div>p {
     position: absolute;
     float: left;
 }
@@ -25,7 +28,10 @@ div#map_div>div {
 
 div#map_div>div.pawn {
     background-image: url(./../img/default.png);
-    background-size: cover;
+    background-size: auto 100%;
+    background-position: center;
+    background-repeat: no-repeat;
+    z-index: 1;
 }
 
 /*explaining in the map*/
@@ -35,13 +41,32 @@ div#map_div>div.explaining {
     background: #73AD21;
     padding: 20px;
     width: 200px;
-    height: 150px;
 }
 
-div.explaining > h1{
-    font-size: 12px;
+div.explaining>h1 {
+    font-size: 18px;
 }
 
-div.explaining > p{
-    font-size: 10px;
+div.explaining>p {
+    font-size: 16px;
+}
+
+/* player follower */
+
+div#map_div>div#follower {
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    margin-top: -12px;
+    margin-left: -12px;
+    background: transparent;
+    border: 2px solid rgb(255, 255, 255);
+    z-index: 0;
+}
+
+div#map_div>p#follower_text {
+    text-align: center;
+    width: 100px;
+    margin-left: -50px;
+    color:white;
 }
