@@ -2,26 +2,15 @@ const DEBUG = true
 
 // requestForPlayerPositions() is periodically called to ask for other players' position
 function requestForPlayerPositions() {
-    if(DEBUG){
-        var ret=[
-            {
-                "player": "Graziano",
-                "position_x": "180",
-                "position_y": "300"
-            },
-            {
-                "player": "Silvano",
-                "position_x": "280",
-                "position_y": "700"
-            },
-            {
-                "player": "Mariano",
-                "position_x": "580",
-                "position_y": "80"
-            },
-
-    ]
-        drawPlayers(ret);
+    if (DEBUG) {
+        var ret = {
+            "players": [
+                { "player": "Graziano", "position_x": "180", "position_y": "300" },
+                { "player": "Silvano", "position_x": "280", "position_y": "700" },
+                { "player": "Mariano", "position_x": "580", "position_y": "80" }
+            ]
+        };
+        drawPlayers(ret.players);
         return;
     }
 

@@ -2,11 +2,46 @@ body {
     background-color: grey;
 }
 
+/*map playground*/
+
 div#map_div {
     height: 1000px;
     width: 1000px;
     background-color: white;
-    left: 0;
-    right: 0;
-    margin: auto;
+    left: 0px;
+    right: 0px;
+    padding: 0px;
+    position: relative;
+}
+
+/*elements in the map*/
+
+div#map_div>div {
+    position: absolute;
+    float: left;
+}
+
+/*pawns in the map*/
+
+div#map_div>div.pawn {
+    background-image: url(./../img/default.png);
+    background-size: cover;
+}
+
+/*explaining in the map*/
+
+div#map_div>div.explaining {
+    border-radius: 20px;
+    background: #73AD21;
+    padding: 20px;
+    width: 200px;
+    height: 150px;
+}
+
+div.explaining > h1{
+    font-size: 12px;
+}
+
+div.explaining > p{
+    font-size: 10px;
 }
