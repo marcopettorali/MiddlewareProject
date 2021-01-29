@@ -89,6 +89,8 @@ div#map_div>p#follower_text {
     text-align: center;
     width: 100px;
     margin-left: -50px;
+    max-width: 100px;
     padding: 0px 5px;
+    white-space: nowrap;
     color: white;
 }
