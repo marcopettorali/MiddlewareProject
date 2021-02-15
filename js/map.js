@@ -59,10 +59,16 @@ function drawPlayer(player) {
 
         //listen to mouseup for selecting the followed player
         playerPawn.onmouseup = function (e) {
-            if (FOLLOWED_PLAYER != null && FOLLOWED_PLAYER.player == player.player) {
-                FOLLOWED_PLAYER = null;
+            if (FOLLOWED_PLAYER == null || FOLLOWED_PLAYER.player != player.player) {
+                for(i = 0; i<LIST.length; i++){
+                    if(player.player == LIST[i].player){
+                        FOLLOWED_PLAYER = LIST[i];
+                        break;
+                    }
+                }
+                
             } else {
-                FOLLOWED_PLAYER = player;
+                FOLLOWED_PLAYER = null;
             }
             updatePlayerFollower();
             updatePlayersTableSelected();

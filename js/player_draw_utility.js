@@ -101,12 +101,14 @@ function insertPlayersTable(player) {
     playersTablePosition.innerHTML = "(x=" + player.position_x + ", y=" + player.position_y + ")";
     playersTableDiv.appendChild(playersTablePosition);
 
-    playersTableDiv.onmouseup = function (e) {
-
-        
-
+    playersTableDiv.onmouseup = function (e) { 
         if (FOLLOWED_PLAYER == null || FOLLOWED_PLAYER.player != player.player) {
-            FOLLOWED_PLAYER = player;
+            for(i = 0; i<LIST.length; i++){
+                if(player.player == LIST[i].player){
+                    FOLLOWED_PLAYER = LIST[i];
+                    break;
+                }
+            }
         } else {
             FOLLOWED_PLAYER = null;
         }
@@ -128,10 +130,9 @@ function clearPlayersTableSelected() {
 function updatePlayersTableSelected() {
     var tableElems = document.getElementsByClassName('players_table_elem');
     for (i = 0; i < tableElems.length; i++) {
+        tableElems[i].setAttribute('class', tableElems[i].getAttribute('class').replace(" clicked_table_div", ""));
         if (FOLLOWED_PLAYER != null && tableElems[i].getAttribute('id') == (FOLLOWED_PLAYER.player + '_players_table_elem')) {
             tableElems[i].setAttribute('class', tableElems[i].getAttribute('class') + " clicked_table_div");
-        } else {
-            tableElems[i].setAttribute('class', tableElems[i].getAttribute('class').replace(" clicked_table_div", ""));
         }
     }
 }
