@@ -1,13 +1,25 @@
 const AJAX_POLLING_PERIOD_MS = 500
 const PLAYER_PAWN_SIZE = 50
+var MAP = null;
+var LIST = null;
 
-var PLAYER_FOLLOWER = null;
+var FOLLOWED_PLAYER = null;
 
 function main() {
     document.addEventListener('keyup', function (e) {
         handleKey(e.key);
     })
     setInterval(requestForPlayerPositions, AJAX_POLLING_PERIOD_MS)
+
+    MAP = document.getElementById('map_div');
+    MAP.onmouseup = function (e) {
+        if (e.target.getAttribute('id') == 'map_div') {
+            clearPlayersTableSelected();
+            FOLLOWED_PLAYER = null;
+            updatePlayerFollower();
+            updatePlayersTableSelected();
+        }
+    }
 }
 
 function handleKey(key) {
@@ -24,12 +36,46 @@ function handleKey(key) {
 }
 
 function drawPlayer(player) {
-    var map = document.getElementById('map_div');
+    var playerPawn = document.getElementById(player.player + '_pawn_div');
 
-    var playerPawn = document.createElement('div');
-    playerPawn.setAttribute('id', player.player + '_pawn_div');
-    playerPawn.setAttribute('class', "pawn");
+    // if player doesn't exists
+    if (playerPawn == null) {
+        // create div for pawn
+        playerPawn = document.createElement('div');
+        playerPawn.setAttribute('id', player.player + '_pawn_div');
+        playerPawn.setAttribute('class', "pawn");
 
+        //listen to mouseover and mouseleave for explaining div
+        playerPawn.onmouseover = function (e) {
+            buildExplainingDivForPlayer(player);
+        }
+
+        playerPawn.onmouseleave = function (e) {
+            var explainingDiv = document.getElementById(player.player + '_explaining_div');
+            if (explainingDiv != null) {
+                explainingDiv.remove();
+            }
+        }
+
+        //listen to mouseup for selecting the followed player
+        playerPawn.onmouseup = function (e) {
+            if (FOLLOWED_PLAYER != null && FOLLOWED_PLAYER.player == player.player) {
+                FOLLOWED_PLAYER = null;
+            } else {
+                FOLLOWED_PLAYER = player;
+            }
+            updatePlayerFollower();
+            updatePlayersTableSelected();
+        }
+    }
+
+    //update followed player position
+    if (FOLLOWED_PLAYER != null && FOLLOWED_PLAYER.player == player.player) {
+        FOLLOWED_PLAYER = player;
+        updatePlayerFollower();
+    }
+
+    //change pawn position and style
     var playerPawnStyle = '' +
         'height: ' + PLAYER_PAWN_SIZE + 'px;' +
         'width: ' + PLAYER_PAWN_SIZE + 'px;' +
@@ -40,99 +86,39 @@ function drawPlayer(player) {
         '';
     playerPawn.setAttribute('style', playerPawnStyle);
 
-    playerPawn.onmouseover = function (e) {
-        var otherDiv = document.getElementById(player.player + '_explaining_div');
-        if (otherDiv == null) {
-            var explainingDiv = document.createElement('div');
-            explainingDiv.setAttribute('class', 'explaining');
-            explainingDiv.setAttribute('id', player.player + '_explaining_div');
+    MAP.appendChild(playerPawn);
 
-            //adding title label
-            var explainingDivTitle = document.createElement('h1');
-            explainingDivTitle.innerHTML = player.player;
-            explainingDiv.appendChild(explainingDivTitle);
-
-            //adding position label
-            var explainingDivTitle = document.createElement('p');
-            explainingDivTitle.innerHTML = "(x=" + player.position_x + ", y=" + player.position_y + ")";
-            explainingDiv.appendChild(explainingDivTitle);
-
-            var explainingDivStyle = '' +
-                'top: ' + (player.position_y - PLAYER_PAWN_SIZE) + 'px;' +
-                'left: ' + (parseInt(player.position_x) + PLAYER_PAWN_SIZE / 2) + 'px;' +
-                '';
-            explainingDiv.setAttribute('style', explainingDivStyle);
-
-            map.appendChild(explainingDiv);
-        }
-    }
-
-    playerPawn.onmouseleave = function (e) {
-        var explainingDiv = document.getElementById(player.player + '_explaining_div');
-        if (explainingDiv != null) {
-            explainingDiv.remove();
-        }
-    }
-
-    playerPawn.onmouseup = function (e) {
-        if (PLAYER_FOLLOWER == null || PLAYER_FOLLOWER != player.player) {
-            PLAYER_FOLLOWER = player.player;
-        } else {
-            PLAYER_FOLLOWER = null;
-        }
-    }
-
-    map.appendChild(playerPawn);
-
-    //Check if this is the followed player
-    if (PLAYER_FOLLOWER == player.player) {
-        //follower circle
-        var follower = document.createElement('div');
-        follower.setAttribute('id', 'follower');
-
-        var followerStyle = '' +
-            'top: ' + (player.position_y) + 'px;' +
-            'left: ' + (player.position_x) + 'px;' +
-            '';
-        follower.setAttribute('style', followerStyle);
-
-        map.appendChild(follower);
-
-        //follower text
-        var followerText = document.createElement('p');
-        followerText.setAttribute('id', 'follower_text');
-        followerText.innerHTML = player.player;
-
-        var followerTextStyle = '' +
-            'top: ' + parseInt(player.position_y) + 'px;' +
-            'left: ' + (player.position_x) + 'px;' +
-            '';
-        followerText.setAttribute('style', followerTextStyle);
-        map.appendChild(followerText);
-    }
 }
 
 function drawPlayers(players) {
-    // remove all pawns and the follower (if present)
-    var pawns = document.getElementById('map_div').getElementsByClassName('pawn');
-    if (pawns !== undefined) {
-        for (i = 0; i < pawns.length; i++) {
-            pawns[i].remove();
-        }
-    }
 
-    var follower = document.getElementById('follower');
-    if (follower != null) {
-        follower.remove();
-    }
-
-    var followerText = document.getElementById('follower_text');
-    if (followerText != null) {
-        followerText.remove();
-    }
 
     //draw each player
     for (i in players) {
         drawPlayer(players[i]);
+        insertPlayersTable(players[i]);
     }
+
+    playersToRemove = [];
+
+    if (LIST != null) {
+        for (i = 0; i < LIST.length; i++) {
+            found = false;
+            for (j = 0; j < players.length; j++){
+                if(LIST[i].player == players[j].player){
+                    found = true;
+                }
+            }
+            if(!found){
+                playersToRemove.push(LIST[i]);
+            }   
+        }
+    }
+
+    removePlayersFromTable(playersToRemove);
+
+    LIST = players;
+
+    updatePlayerFollower();
+    updatePlayersTableSelected();
 }
